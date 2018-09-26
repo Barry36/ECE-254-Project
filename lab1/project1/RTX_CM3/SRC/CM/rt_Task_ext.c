@@ -66,6 +66,7 @@ OS_RESULT rt_tsk_get (OS_TID task_id, RL_TASK_INFO *p_task_info) {
 		top_stack = (U32)task_active -> stack;
 		used = stack_size - (top_task - top_stack);
 			
+		// Updated to the file
 		p_task_info -> stack_usage = (100 * 2 * used) / stack_size;
 		p_task_info -> task_id = task_id;
 		p_task_info -> state = task_active -> state;
