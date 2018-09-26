@@ -15,116 +15,96 @@ OS_TID test_task_3;
 OS_TID test_task_4;
 OS_TID test_task_5;
 
+
+
+
+
 __task void task1()
 {
-	while(1){
-		RL_TASK_INFO test2;
-		RL_TASK_INFO test3;
-	
-		os_tsk_get(test_task_2,&test2);
-		os_tsk_get(test_task_3,&test3);
-	
-		printf("Task2 state: %d\n", test2.state);
-		printf("Task3 stack_usage: %d\n", test3.stack_usage);
-	}
+while(1){
+RL_TASK_INFO test2;
+RL_TASK_INFO test3;
+os_tsk_get(test_task_2,&test2);
+os_tsk_get(test_task_3,&test3);
+printf("Task2 state: %d\n", test2.state);
+printf("Task3 stack_usage: %d\n", test3.stack_usage);
+}
 }
 
 __task void task2()
 {
-	while(1){
-			printf("This is a long period...\n");
-			os_dly_wait(1000);
-		}
+while(1){
+printf("This is q...\n");
+os_dly_wait(10);
 }
-__task void task3() {
-
-	// Fill stack with identifying values
-	U8 t[440];
-	U32 i = 0;
-
-	// Fill the stack with 0xAA's (see in Memory window of debugger)
-	t[0] = 0xAA;
-	for(i=1;i<sizeof(t)/sizeof(U8);i++) {
-		t[i] = t[i-1];
-	}
-
-	// Keep the task running forever
-	for(i=0;; i++){}
 }
+
+
+__task void testTask()
+{
+// Fill stack with identifying values
+U8 t[440];
+U32 i = 0;
+// Fill the stack with 0xAA's (see in Memory window of debugger)
+t[0] = 0xAA;
+for(i=1;i<sizeof(t)/sizeof(U8);i++) {
+t[i] = t[i-1];
+}
+// Keep the task running forever
+for(i=0;; i++){}
+}
+
+
+
+
+
 
 __task void task4() {
-	while(1){
-		printf("Number tasks: %d\n", os_tsk_count_get());
-		os_dly_wait(300);
-	}
+while(1){
+printf("Number tasks: %d\n", os_tsk_count_get());
+os_dly_wait(30);
+}
 }
 
 __task void task5() {
-	while(1){
-		RL_TASK_INFO test1;
-		RL_TASK_INFO test2;
-		RL_TASK_INFO test3;
-		RL_TASK_INFO test4;
-		RL_TASK_INFO test5;
-	
-		os_tsk_get(test_task_1,&test1);
-		os_tsk_get(test_task_2,&test2);
-		os_tsk_get(test_task_3,&test3);
-		os_tsk_get(test_task_4,&test4);
-		os_tsk_get(test_task_5,&test5);
-	
-		printf("Task1 state: %d \n", test1.state);
-		printf("Task2 state: %d \n", test2.state);
-		printf("Task3 state: %d \n", test3.state);
-		printf("Task4 state: %d \n", test4.state);
-		printf("Task5 state: %d \n", test5.state);
-		
-		printf("Task1 prio: %d \n", test1.prio);
-		printf("Task2 prio: %d \n", test2.prio);
-		printf("Task3 prio: %d \n", test3.prio);
-		printf("Task4 prio: %d \n", test4.prio);
-		printf("Task5 prio: %d \n", test5.prio);
-		
-		printf("Task1 task id: %d \n", test1.task_id);
-		printf("Task2 task id: %d \n", test2.task_id);
-		printf("Task3 task id: %d \n", test3.task_id);
-		printf("Task4 task id: %d \n", test4.task_id);
-		printf("Task5 task id: %d \n", test5.task_id);
-		
-		printf("Task1 stack usage: %d \n", test1.stack_usage);
-		printf("Task2 stack usage: %d \n", test2.stack_usage);
-		printf("Task3 stack usage: %d \n", test3.stack_usage);
-		printf("Task4 stack usage: %d \n", test4.stack_usage);
-		printf("Task5 stack usage: %d \n", test5.stack_usage);
-		
-		printf("Task1 ptask: %d \n", test1.ptask);
-		printf("Task2 ptask: %d \n", test2.ptask);
-		printf("Task3 ptask: %d \n", test3.ptask);
-		printf("Task4 ptask: %d \n", test4.ptask);
-		printf("Task5 ptask: %d \n", test5.ptask);
-		
-		os_dly_wait(300);
-	}
+while(1){
+
+RL_TASK_INFO test3;
+
+os_tsk_get(test_task_3,&test3);
+
+printf("Task3 state: %d \n", test3.state);
+
+printf("Task3 prio: %d \n", test3.prio);
+
+printf("Task3 task id: %d \n", test3.task_id);
+
+printf("Task3 stack usage: %d \n", test3.stack_usage);
+
+printf("Task3 ptask: %d \n", test3.ptask);
+
+os_dly_wait(30);
+}
 }
 
 __task void init(void)
 {
 
 
-	test_task_1 = os_tsk_create(task1, 1); 
-	test_task_2 = os_tsk_create(task2, 1); 
-	test_task_3 = os_tsk_create(task3, 1); 
-	test_task_4 = os_tsk_create(task4, 1);
-	test_task_5 = os_tsk_create(task5, 1);
-	
+test_task_1 = os_tsk_create(task1, 1); 
+test_task_2 = os_tsk_create(task2, 1); 
+test_task_3 = os_tsk_create(testTask, 1); 
+test_task_4 = os_tsk_create(task4, 1);
+test_task_5 = os_tsk_create(task5, 1);
 
-	// Delete before exit, this is very important!!
-	os_tsk_delete_self(); 
+// Delete before exit, this is very important!!
+os_tsk_delete_self(); 
 }
 int main ()
 
 {
-	SystemInit();
-	uart0_init();
-	os_sys_init(init);
+SystemInit();
+uart0_init();
+os_sys_init(init);
 }
+
