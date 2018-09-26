@@ -41,6 +41,7 @@ OS_RESULT rt_tsk_get (OS_TID task_id, RL_TASK_INFO *p_task_info) {
 
 	// top_stack is the top of the stack of a particular the task
 	// top_task is the top of the task stack (R13)
+	// stack_size = (U16)os_stackinfo;	
 	U32 stack_size, top_stack, top_task, used;
 	
 	// If task is active the proceed
@@ -65,7 +66,7 @@ OS_RESULT rt_tsk_get (OS_TID task_id, RL_TASK_INFO *p_task_info) {
 		top_stack = (U32)task_active -> stack;
 		used = stack_size - (top_task - top_stack);
 			
-		p_task_info -> stack_usage = (100 * used) / stack_size;
+		p_task_info -> stack_usage = (100 * 2 * used) / stack_size;
 		p_task_info -> task_id = task_id;
 		p_task_info -> state = task_active -> state;
 		p_task_info -> prio = task_active -> prio;
