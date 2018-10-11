@@ -23,7 +23,7 @@
 #include "rt_MemBox_ext.h" /* added in ECE254 lab keil_proc */   
 
 /* ECE254 Lab Comment: You may need to include more header files */
-
+#include "rt_List.h"
 /*----------------------------------------------------------------------------
  *      Global Variables
  *---------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
  */
 void *rt_mem_alloc (void *mem_pool) {
 	/* Add your own code here. Change the following line accordingly */
+	
+	
 	return NULL;
 }
 
@@ -56,6 +58,13 @@ void *rt_mem_alloc (void *mem_pool) {
  */
 OS_RESULT rt_mem_free (void *mem_pool, void *box) {
 	/* Add your own code here. Change the following line accordingly */
+	if (box == NULL){
+		return OS_R_NOK;
+		
+		else if // no tasks are waiting, then rt_free_box
+			
+		else // ...
+	
 	return (OS_R_OK);
 }
 /*----------------------------------------------------------------------------
