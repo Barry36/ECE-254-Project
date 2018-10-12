@@ -31,6 +31,15 @@
 /* added in ECE254 lab keil_rtx */
 int rt_tsk_count_get (void) {
 	/* Add your own code here. Change the following line accordingly */
+	int ret;
+	
+	for (U32 tid = 0; tid < os_maxtaskrun; tid++){
+		p_task_mytest = os_active_TCB[tid];
+		if (p_task_mytest != NULL && p_task_mytest != INACTIVE){
+			ret++;
+		}
+	}
+	
 	return 0;
 }
 
