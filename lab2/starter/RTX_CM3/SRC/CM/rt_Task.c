@@ -113,7 +113,7 @@ void rt_dispatch (P_TCB next_TCB) {
 void rt_block (U16 timeout, U8 block_state) {
   /* Block running task and choose next ready task.                         */
   /* "timeout" sets a time-out value or is 0xffff (=no time-out).           */
-  /* "block_state" defines the appropriate task state */
+  /* "block_state" defines the appropriate task state                       */
   P_TCB next_TCB;
 
   if (timeout) {
