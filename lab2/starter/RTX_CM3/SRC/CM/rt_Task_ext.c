@@ -31,6 +31,8 @@
 /* added in ECE254 lab keil_rtx */
 int rt_tsk_count_get (void) {
 	/* Add your own code here. Change the following line accordingly */
+	
+	/* ECE 254 code below */
 	int ret;
 	
 	for (U32 tid = 0; tid < os_maxtaskrun; tid++){
@@ -40,7 +42,7 @@ int rt_tsk_count_get (void) {
 		}
 	}
 	
-	return 0;
+	return ret;
 }
 
 /*--------------------------- rt_tsk_get ------------------------------------*/
