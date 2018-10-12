@@ -24,10 +24,12 @@
 
 /* ECE254 Lab Comment: You may need to include more header files */
 #include "rt_List.h"
+
+
 /*----------------------------------------------------------------------------
  *      Global Variables
  *---------------------------------------------------------------------------*/
-
+struct OS_XCB queue;
 
 /*----------------------------------------------------------------------------
  *      Global Functions
@@ -44,7 +46,25 @@
  */
 void *rt_mem_alloc (void *mem_pool) {
 	/* Add your own code here. Change the following line accordingly */
+
+	void* block_ptr;
+	P_TCB task;
 	
+	// Allocate a block of memory to the task
+	block_ptr = rt_alloc_box(mem_pool);
+
+	// Return the pointer pointing to the allocated memory block 
+	// if we can successfully allocate a block of memory for the given task
+
+	// Otherwise we block the task until there is an available block of memory
+	if(block_ptr != NULL){
+		return block_ptr;
+	}else {
+		task = os_active_TCB[rt_tsk_self() - 1];
+		rt_put_prio(&queue, task);
+		rt_block(0xffff, WAIT_MEM);
+	}
+
 	
 	return NULL;
 }

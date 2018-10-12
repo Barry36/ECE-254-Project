@@ -33,7 +33,7 @@ Answer: it gets the first task (with the highest priority, at the head of the li
 4. Read the rt_Task.c file and answer the following questions:
 4.1 (2 points) What does the rt_block() function do?
 -----------------------------------------------------------------------------------------------------
-Answer: it block the task currently running and selects the next task that is ready
+Answer: It blocks the task currently running and selects the next task that is ready
 
 4.2 (2 points) What does the rt_dispatch() function do?
 -----------------------------------------------------------------------------------------------------
@@ -50,7 +50,13 @@ Answer: it dispatches the next task (or the next ready task with highest priorit
     functions isr_mbx_receive() and rt_mbx_psh() for the purpose of completing this
     assignment.
 -----------------------------------------------------------------------------------------------------
-Answer: ¿¿ Because the return value is set by rt_mbx_send() instead of the rt_mbx_wait (line 54). In rt_mbx_wait(), the OS_R_MBX value signifies that an item was put in the mailbox so it is set by the rt_mbx_send() instead. /* But how does rt_mbx_send() set OS_R_MBX */ ??
+Answer: 
+        This is because the value OS_R_MBX means that the task is waiting for a message to be put in the mailbox,
+        so there is no need to return this value from rt_mbx_wait(). 
+        
+        Thus, the return value is set by rt_mbx_send() instead of the rt_mbx_wait (line 54). 
+
+        However, rt_mbx_wait() waits for a message to be put into the mailbox. 
 
 6. (2 points) To block a task, you will need to create a queue that the blocked tasks
     can stay. There are two global queues for now in the kernel and they are os_rdy and
