@@ -60,7 +60,7 @@ void *rt_mem_alloc (void *mem_pool) {
 	if(block_ptr != NULL){
 		return block_ptr;
 	}else {
-		task = os_active_TCB[rt_tsk_self() - 1];
+		task = os_active_TCB[rt_tsk_self() - 1];		/* alternative: os_tsk.run */
 		rt_put_prio(&queue, task);
 		rt_block(0xffff, WAIT_MEM);
 	}
@@ -78,13 +78,16 @@ void *rt_mem_alloc (void *mem_pool) {
  */
 OS_RESULT rt_mem_free (void *mem_pool, void *box) {
 	/* Add your own code here. Change the following line accordingly */
+	
+	/* Added for ECE254 */
+	/*
 	if (box == NULL){
 		return OS_R_NOK;
 		
 		else if // no tasks are waiting, then rt_free_box
 			
 		else // ...
-	
+	*/
 	return (OS_R_OK);
 }
 /*----------------------------------------------------------------------------

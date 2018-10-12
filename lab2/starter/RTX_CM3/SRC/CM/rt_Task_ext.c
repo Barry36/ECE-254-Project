@@ -34,14 +34,14 @@ int rt_tsk_count_get (void) {
 	
 	/* ECE 254 code below */
 	int ret;
-	
+	/*
 	for (U32 tid = 0; tid < os_maxtaskrun; tid++){
 		p_task_mytest = os_active_TCB[tid];
 		if (p_task_mytest != NULL && p_task_mytest != INACTIVE){
 			ret++;
 		}
 	}
-	
+	*/
 	return ret;
 }
 
