@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>HelloWorld SIM</TargetName>
+      <TargetName>Starter SIM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -44,7 +44,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\build\FLASH\</OutputDirectory>
-          <OutputName>HelloWorld</OutputName>
+          <OutputName>RTX_APP</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -80,7 +80,7 @@
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
-          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SelectedForBatchBuild>1</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -139,7 +139,7 @@
             <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>0</TargetSelection>
+          <TargetSelection>1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -200,7 +200,7 @@
             <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M3"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
-            <mOS>1</mOS>
+            <mOS>0</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
             <hadIROM>1</hadIROM>
@@ -348,7 +348,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>SIMULATOR</Define>
+              <Define>MYSIM</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -396,21 +396,21 @@
               <FileType>2</FileType>
               <FilePath>.\src\startup_LPC17xx.s</FilePath>
             </File>
-            <File>
-              <FileName>Retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Startup\Retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>RTX_Conf_CM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Startup\RTX_Conf_CM.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>System Code</GroupName>
           <Files>
+            <File>
+              <FileName>RTX_Conf_CM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\RTX_Conf_CM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Retarget.c</FilePath>
+            </File>
             <File>
               <FileName>system_LPC17xx.c</FileName>
               <FileType>1</FileType>
@@ -427,9 +427,19 @@
           <GroupName>Source Code</GroupName>
           <Files>
             <File>
-              <FileName>helloworld.c</FileName>
+              <FileName>main_task_exp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\helloworld.c</FilePath>
+              <FilePath>.\src\main_task_exp.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Helpers</GroupName>
+          <Files>
+            <File>
+              <FileName>lab2_helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\lab2_helper.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -441,27 +451,22 @@
               <FileType>4</FileType>
               <FilePath>..\RTX_CM3\CM3_LE\RTX_CM3.lib</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Doc</GroupName>
+          <Files>
             <File>
-              <FileName>RTL_ext.h</FileName>
+              <FileName>Test_spec.txt</FileName>
               <FileType>5</FileType>
-              <FilePath>..\RTX_CM3\INC\RTL_ext.h</FilePath>
-            </File>
-            <File>
-              <FileName>rt_Task_ext.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RTX_CM3\SRC\CM\rt_Task_ext.c</FilePath>
-            </File>
-            <File>
-              <FileName>rt_Task_ext.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\RTX_CM3\SRC\CM\rt_Task_ext.h</FilePath>
+              <FilePath>.\Test_spec.txt</FilePath>
             </File>
           </Files>
         </Group>
       </Groups>
     </Target>
     <Target>
-      <TargetName>HelloWorld RAM</TargetName>
+      <TargetName>Starter RAM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -498,13 +503,13 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\build\RAM\</OutputDirectory>
-          <OutputName>HelloWorld</OutputName>
+          <OutputName>RTX_APP</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\build\RAM\lst\</ListingPath>
+          <ListingPath>.\build\FLASH\lst\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -584,7 +589,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -616,11 +621,11 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>0</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <Capability>1</Capability>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
         </Utilities>
         <TargetArmAds>
@@ -802,7 +807,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>MYSIM</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -850,21 +855,21 @@
               <FileType>2</FileType>
               <FilePath>.\src\startup_LPC17xx.s</FilePath>
             </File>
-            <File>
-              <FileName>Retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Startup\Retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>RTX_Conf_CM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Startup\RTX_Conf_CM.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>System Code</GroupName>
           <Files>
+            <File>
+              <FileName>RTX_Conf_CM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\RTX_Conf_CM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Retarget.c</FilePath>
+            </File>
             <File>
               <FileName>system_LPC17xx.c</FileName>
               <FileType>1</FileType>
@@ -881,9 +886,19 @@
           <GroupName>Source Code</GroupName>
           <Files>
             <File>
-              <FileName>helloworld.c</FileName>
+              <FileName>main_task_exp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\helloworld.c</FilePath>
+              <FilePath>.\src\main_task_exp.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Helpers</GroupName>
+          <Files>
+            <File>
+              <FileName>lab2_helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\lab2_helper.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -895,20 +910,15 @@
               <FileType>4</FileType>
               <FilePath>..\RTX_CM3\CM3_LE\RTX_CM3.lib</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Doc</GroupName>
+          <Files>
             <File>
-              <FileName>RTL_ext.h</FileName>
+              <FileName>Test_spec.txt</FileName>
               <FileType>5</FileType>
-              <FilePath>..\RTX_CM3\INC\RTL_ext.h</FilePath>
-            </File>
-            <File>
-              <FileName>rt_Task_ext.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RTX_CM3\SRC\CM\rt_Task_ext.c</FilePath>
-            </File>
-            <File>
-              <FileName>rt_Task_ext.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\RTX_CM3\SRC\CM\rt_Task_ext.h</FilePath>
+              <FilePath>.\Test_spec.txt</FilePath>
             </File>
           </Files>
         </Group>
