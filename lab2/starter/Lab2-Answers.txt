@@ -56,8 +56,10 @@ Answer:
         This is because the value OS_R_MBX is set by p_TCB->ret_val = OS_R_MBX; (line 54 in rt_mbx_send() function).
         The value OS_R_MBX is like a signal that notifies the target task that there is a message in your mailbox, and
         this signal is got by the target task when the target task gets the message from its mailbox.
+        This is why the os_mbx_wait() function has 3 possible return values, OS_R_MBX to indicate a message received, OS_R_TMO for a timeout and OS_R_OK, 
+        whereas the OS_mbx_send() function only has 2 return values, OS_R_TMO AND OS_R_OK.
 
-        
+
 
 6. (2 points) To block a task, you will need to create a queue that the blocked tasks
     can stay. There are two global queues for now in the kernel and they are os_rdy and
