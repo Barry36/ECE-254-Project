@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NUM_NAMES 9
+#define NUM_NAMES 8
 _declare_box(mempool,12,20);
 
 void* box;
@@ -29,7 +29,6 @@ __task void task3(void);
 __task void task4(void);
 __task void task5(void);
 __task void task6(void);
-__task void taskS(void);
 __task void init (void);
  
 extern char *state2str(unsigned char state, char *str);
@@ -53,7 +52,6 @@ struct func_info g_task_map[NUM_NAMES] = \
   {task4, "task4"},   \
   {task5, "task5"},	  \
   {task6, "task6"},	  \
-  {taskS, "taskS"},	  \
   {init,  "init" },		
 
 };
@@ -116,7 +114,7 @@ __task void task2(void)
 			os_mut_release(g_mut_uart);
 		} 
 		#ifdef MYSIM
-		os_dly_wait(20);
+		os_dly_wait(2);
 		#else
 		os_dly_wait(200);
 		#endif
@@ -170,9 +168,9 @@ __task void task4(void){
 	os_mut_release(g_mut_uart);
 	box = os_mem_alloc(mempool);
 	
-	os_mut_wait(g_mut_uart, 0xFFFF);
+//	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("Task4 ID: %d Got box %d (unblocked) \n", os_tsk_self(), box);
-	os_mut_release(g_mut_uart);
+//	os_mut_release(g_mut_uart);
 	
 	os_tsk_delete_self(); 
 }
@@ -190,9 +188,9 @@ __task void task5(void){
 	printf("Task5 ID: %d, Attempting to get box (gets blocked) \n", os_tsk_self());
 	os_mut_release(g_mut_uart);
 	box2 = os_mem_alloc(mempool);
-	os_mut_wait(g_mut_uart, 0xFFFF);
+//	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("Task5 ID: %d Got box %d (unblocked first since it has higher priority) \n", os_tsk_self(), box2);
-	os_mut_release(g_mut_uart);
+//	os_mut_release(g_mut_uart);
 	
 	os_tsk_delete_self(); 
 }
@@ -219,24 +217,6 @@ __task void task6(void){
 	os_tsk_delete_self();
 }
 
-/*--------------------------- taskS -----------------------------------*/
-/* Sandbox task for testing/debugging		(DELETEME)										 */
-/*---------------------------------------------------------------------*/
-__task void taskS(void){
-	os_dly_wait(10);
-	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("taskS starting\n");
-	os_mut_release(g_mut_uart);
-	
-// 	os_mem_alloc(NULL);
- 	os_mem_free(NULL,NULL);
-	
-	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("taskS exiting\n");
-	os_mut_release(g_mut_uart);
-	os_tsk_delete_self(); 
-}
-
 
 /*--------------------------- init ------------------------------------*/
 /* initialize system resources and create other tasks                  */
@@ -251,7 +231,7 @@ __task void init(void)
 	printf("init: the init Task ID is %d\n", os_tsk_self());
 	os_mut_release(g_mut_uart);
   
-	g_tid = os_tsk_create(task1, 1);  /* task 1 at priority 1 */
+	g_tid = os_tsk_create(task1, 5);  /* task 1 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("init: created task1 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
@@ -280,11 +260,6 @@ __task void init(void)
 	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("init: created task6 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
-	
-	g_tid = os_tsk_create(taskS, 1);  /* taskS at priority 1 */
-	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("init: created taskS with Task ID %d\n", g_tid);
-	os_mut_release(g_mut_uart);
   
 	os_tsk_delete_self();     /* task MUST delete itself before exiting */
 }
@@ -309,18 +284,18 @@ char *fp2name(void (*p)(), char *str)
 	return str;
 }
 
-int main(void)
-{
-	SystemInit();         /* initialize the LPC17xx MCU */
-	uart0_init();         /* initialize the first UART */
-  
-  
-	/* fill the fname map with os_idle_demon entry point */
-	g_task_map[0].p = os_idle_demon;
-  
-	printf("========================================================\n");
-	printf("==                  NEW RUN                           ==\n");
-	printf("========================================================\n");
-	printf("Calling os_sys_init()...\n");
-	os_sys_init(init);    /* initialize the OS and start the first task */
-}
+// int main(void)
+// {
+// 	SystemInit();         /* initialize the LPC17xx MCU */
+// 	uart0_init();         /* initialize the first UART */
+//   
+//   
+// 	/* fill the fname map with os_idle_demon entry point */
+// 	g_task_map[0].p = os_idle_demon;
+//   
+// 	printf("========================================================\n");
+// 	printf("==                  NEW RUN                           ==\n");
+// 	printf("========================================================\n");
+// 	printf("Calling os_sys_init()...\n");
+// 	os_sys_init(init);    /* initialize the OS and start the first task */
+// }

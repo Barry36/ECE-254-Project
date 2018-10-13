@@ -1,1 +1,7 @@
 Write test task specification in this file.
+
+Test 1: Task1 is blocked if there is no memory available when os_mem_alloc() is called, and then resumed once enough memory is allocated by task3.
+Test 2: Task2 periodically prints task status of each task in the system.
+Test 3: Task3 allocates 20 boxes and frees two of them for task4 and task5.
+Test 4: Task4 is created at a lower priority than task5. When memory becomes available, task5 should get unblocked before task4 because it has a higher priority.
+Test 5: Task6 frees a block with no other task in the queue and then re-allocates the same block, independantly from the other tasks.
