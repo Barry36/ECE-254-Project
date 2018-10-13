@@ -231,6 +231,12 @@ __task void init(void)
 	os_mut_release(g_mut_uart);
 
 
+	g_tid = os_tsk_create(task3, 1);  /* task3 at priority 1 */
+	os_mut_wait(g_mut_uart, 0xFFFF);
+	printf("initi: created task3 with Task ID %d\n", g_tid);
+	os_mut_release(g_mut_uart);
+
+
 	g_tid = os_tsk_create(task4, 1);  /* task4 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("initi: created task4 with Task ID %d\n", g_tid);
@@ -242,7 +248,7 @@ __task void init(void)
 	os_mut_release(g_mut_uart);
 
 
-	g_tid = os_tsk_create(free_and_consume_no_queue, 1);  /* task6 at priority 1 */
+	g_tid = os_tsk_create(task6, 1);  /* task6 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("initi: created task6 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
