@@ -49,7 +49,7 @@ void *rt_mem_alloc (void *mem_pool) {
 
 	void* block_ptr;
 	P_TCB task;
-	
+
 	// Allocate a block of memory to the task
 	block_ptr = rt_alloc_box(mem_pool);
 
@@ -60,11 +60,10 @@ void *rt_mem_alloc (void *mem_pool) {
 	if(block_ptr != NULL){
 		return block_ptr;
 	}else {
-		task = os_active_TCB[rt_tsk_self() - 1];		/* alternative: os_tsk.run */
+		task = os_tsk.run;
 		rt_put_prio(&queue, task);
 		rt_block(0xffff, WAIT_MEM);
 	}
-
 	
 	return NULL;
 }
@@ -78,16 +77,24 @@ void *rt_mem_alloc (void *mem_pool) {
  */
 OS_RESULT rt_mem_free (void *mem_pool, void *box) {
 	/* Add your own code here. Change the following line accordingly */
-	
-	/* Added for ECE254 */
-	/*
 	if (box == NULL){
 		return OS_R_NOK;
+	}
+	
+	// if no tasks are waiting for a box then free the box
+	// Otherwise assign the first task in the priority queue to the box
+
+	if(queue.p_lnk == NULL) {
+		rt_free_box(mem_pool, box);
+	}else { 
+		P_TCB task = rt_get_first(&queue);
+
+		// ret_val is the return value upon completion of a wait 
 		
-		else if // no tasks are waiting, then rt_free_box
-			
-		else // ...
-	*/
+		task -> ret_val = (U32)box;
+		rt_dispatch(task);
+	}
+		
 	return (OS_R_OK);
 }
 /*----------------------------------------------------------------------------

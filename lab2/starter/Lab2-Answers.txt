@@ -33,7 +33,9 @@ Answer: it gets the first task (with the highest priority, at the head of the li
 4. Read the rt_Task.c file and answer the following questions:
 4.1 (2 points) What does the rt_block() function do?
 -----------------------------------------------------------------------------------------------------
-Answer: It blocks the task currently running and selects the next task that is ready
+Answer: It blocks the task currently running and selects the next task that shoud run and set its state to ready
+"timeout" sets a time-out value or is 0xffff (=no time-out).
+"block_state" defines the appropriate task state 
 
 4.2 (2 points) What does the rt_dispatch() function do?
 -----------------------------------------------------------------------------------------------------
@@ -51,8 +53,9 @@ Answer: it dispatches the next task (or the next ready task with highest priorit
     assignment.
 -----------------------------------------------------------------------------------------------------
 Answer: 
-        This is because the value OS_R_MBX means that the task is waiting for a message to be put in the mailbox,
-        so there is no need to return this value from rt_mbx_wait(). 
+        This is because the value OS_R_MBX means that the task is waiting for a message to be put in the mailbox then get it,
+        the OS_R_MBX is set by the ret_val in the rt_mbx_send() function (p_TCB->ret_val = OS_R_MBX;), this set the return value of
+        a task to OS_R_MBX directly, 
         
         Thus, the return value is set by rt_mbx_send() instead of the rt_mbx_wait (line 54). 
 

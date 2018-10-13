@@ -12,7 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NUM_NAMES 4
+#define NUM_NAMES 8
+_declare_box(mempool,12,20);
 
 struct func_info {
   void (*p)();      /* function pointer */
@@ -22,6 +23,10 @@ struct func_info {
 extern void os_idle_demon(void);
 __task void task1(void);
 __task void task2(void);
+__task void task3(void);
+__task void task4(void);
+__task void task5(void);
+__task void task6(void);
 __task void init (void);
  
 extern char *state2str(unsigned char state, char *str);
@@ -41,14 +46,20 @@ struct func_info g_task_map[NUM_NAMES] = \
   {NULL,  "os_idle_demon"}, \
   {task1, "task1"},   \
   {task2, "task2"},   \
-  {init,  "init" }
+  {task3, "task3"},	  \
+  {task4, "task4"},   \
+  {task5, "task5"},	  \
+  {task6, "task6"},	  \
+  {init,  "init" },		
+
 };
 
 /* no local variables defined, use one global var */
+/*--------------------------- task1 -----------------------------------*/
 __task void task1(void)
 {
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks1: I am wating for task 2 to finish\n");
+	printf("Task1: I am wating for task 2 to finish\n");
 	os_mut_release(g_mut_uart);
 	
 	os_dly_wait(2);
@@ -56,7 +67,7 @@ __task void task1(void)
 	/****/os_mut_wait(g_mut_evnt, 0xFFFF);
 	
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks1: I am Doing Stuff\n");
+	printf("Task1: I am Doing Stuff\n");
 	os_mut_release(g_mut_uart);
 	
 	/****/os_mut_release(g_mut_evnt);
@@ -80,7 +91,7 @@ __task void task2(void)
 	/****/os_mut_wait(g_mut_evnt, 0xFFFF);
 	
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks2: I am Doing Stuff that must occur before Task 1 runs\n");
+	printf("Task2: I am Doing Stuff that must occur before Task 1 runs\n");
 	os_mut_release(g_mut_uart);
 	
 	/****/os_mut_release(g_mut_evnt);
@@ -119,6 +130,88 @@ __task void task2(void)
 	}
 }
 
+
+
+/*--------------------------- task3 -----------------------------------*/
+/* allocate 20 boxes and free two of them for the task4 and task5      */
+/*---------------------------------------------------------------------*/
+
+__task void task3(void){
+	void** boxes[20];
+	int i = 0;
+	
+	// allocate 20 memory boxes
+	for(i; i < 20; i++){
+		boxes[i] = os_mem_alloc(mempool);
+		printf("Task ID: %d and assigned memory box: %d \n", os_tsk_self(), i);
+	}
+	printf("Task ID: %d and all boxes are allocated to this task \n", os_tsk_self());
+	
+	// free boxes, one at a time
+	
+	os_dly_wait(15);
+	printf("Releasing box 1 %d \n", boxes[0]);
+	os_mem_free(mempool, boxes[0]);
+	printf("Released box 1\n");
+	
+	os_dly_wait(10);
+	printf("Releasing box 2 %d \n", boxes[1]);
+	os_mem_free(mempool, boxes[1]);
+	printf("Released box 2 \n");
+	
+	os_tsk_delete_self(); 
+}
+
+
+/*--------------------------- task4 -----------------------------------*/
+/* Allocate memory blocks (created with a lower priority than task5) */
+/*---------------------------------------------------------------------*/
+__task void task4(void){
+	
+	void* box;
+	
+	os_dly_wait(10);
+	printf("Task ID: %d, Attempting to get box (gets blocked) \n", os_tsk_self());
+	box = os_mem_alloc(mempool);
+	printf("Task ID: %d Got box %d (unblocked) \n", os_tsk_self(), box);
+	
+	os_tsk_delete_self(); 
+}
+
+
+/*--------------------------- task5 -----------------------------------*/
+/* Allocate memory block and gets block (created with a higher priority than task4)
+/*---------------------------------------------------------------------*/
+__task void task5(void){
+	
+	void* box2;
+	
+	os_dly_wait(10);
+	printf("Task ID: %d, Attempting to get box (gets blocked) \n", os_tsk_self());
+	box2 = os_mem_alloc(mempool);
+	printf("Task ID: %d Got box %d (unblocked first since it has higher priority) \n", os_tsk_self(), box2);
+	
+	os_tsk_delete_self(); 
+}
+
+/*--------------------------- task6 -----------------------------------*/
+/* Free a block with no other task in the queue and then re-allocate the same block
+/*---------------------------------------------------------------------*/
+__task void task6(void){
+	void* box;
+	os_dly_wait(50);
+	printf("task 6 Task ID: %d, Freeing one box %d \n", os_tsk_self(), box);
+	os_mem_free(mempool, box);
+	
+	printf("task 6 Task ID: %d, consuming one box %d with no tasks waiting in queue \n", os_tsk_self(), box);
+	box = os_mem_alloc(mempool);
+	printf("task 6 Task ID: %d now has box %d \n", os_tsk_self(), box);
+	
+	os_tsk_delete_self();
+}
+
+
+
 /*--------------------------- init ------------------------------------*/
 /* initialize system resources and create other tasks                  */
 /*---------------------------------------------------------------------*/
@@ -128,18 +221,37 @@ __task void init(void)
 	os_mut_init(&g_mut_evnt);
 	
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("init: the init TID is %d\n", os_tsk_self());
+	printf("init: the init Task ID is %d\n", os_tsk_self());
 	os_mut_release(g_mut_uart);
   
 	g_tid = os_tsk_create(task1, 1);  /* task 1 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("init: created task1 with TID %d\n", g_tid);
+	printf("init: created task1 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
   
 	g_tid = os_tsk_create(task2, 1);  /* task 2 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("init: created task2 with TID %d\n", g_tid);
+	printf("init: created task2 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
+	
+	/************* add:       os_tsk_create(task3, 1);          ????? */
+
+	g_tid = os_tsk_create(task4, 1);  /* task4 at priority 1 */
+	os_mut_wait(g_mut_uart, 0xFFFF);
+	printf("initi: created task4 with Task ID %d\n", g_tid);
+	os_mut_release(g_mut_uart);
+	
+	g_tid = os_tsk_create(task5, 2);  /* task5 at priority 2 */
+	os_mut_wait(g_mut_uart, 0xFFFF);
+	printf("initi: created task5 with Task ID %d\n", g_tid);
+	os_mut_release(g_mut_uart);
+
+
+	g_tid = os_tsk_create(task6, 1);  /* task6 at priority 1 */
+	os_mut_wait(g_mut_uart, 0xFFFF);
+	printf("initi: created task6 with Task ID %d\n", g_tid);
+	os_mut_release(g_mut_uart);
+
   
 	os_tsk_delete_self();     /* task MUST delete itself before exiting */
 }
