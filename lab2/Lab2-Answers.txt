@@ -55,7 +55,7 @@ Answer: it dispatches the next task (or the next ready task with highest priorit
 Answer: 
         This is because the value OS_R_MBX is set by p_TCB->ret_val = OS_R_MBX; (line 54 in rt_mbx_send() function).
         The value OS_R_MBX is like a signal that notifies the target task that there is a message in your mailbox, and
-        this signal is got by the target task when the target task gets the message from its mailbox.
+        this signal is got by the target task when the target task gets the message from its mailbox. So this value cannot be set during the task is waiting for a message (in the rt_mbx_wait() function), since if a function is blocked, it needs a message to send to it and thus the return value is set in the rt_mbx_send() function.
         This is why the os_mbx_wait() function has 3 possible return values, OS_R_MBX to indicate a message received, OS_R_TMO for a timeout and OS_R_OK, 
         whereas the OS_mbx_send() function only has 2 return values, OS_R_TMO AND OS_R_OK.
 
