@@ -53,13 +53,11 @@ Answer: it dispatches the next task (or the next ready task with highest priorit
     assignment.
 -----------------------------------------------------------------------------------------------------
 Answer: 
-        This is because the value OS_R_MBX means that the task is waiting for a message to be put in the mailbox then get it,
-        the OS_R_MBX is set by the ret_val in the rt_mbx_send() function (p_TCB->ret_val = OS_R_MBX;), this set the return value of
-        a task to OS_R_MBX directly, 
-        
-        Thus, the return value is set by rt_mbx_send() instead of the rt_mbx_wait (line 54). 
+        This is because the value OS_R_MBX is set by p_TCB->ret_val = OS_R_MBX; (line 54 in rt_mbx_send() function).
+        The value OS_R_MBX is like a signal that notifies the target task that there is a message in your mailbox, and
+        this signal is got by the target task when the target task gets the message from its mailbox.
 
-        However, rt_mbx_wait() waits for a message to be put into the mailbox. 
+        
 
 6. (2 points) To block a task, you will need to create a queue that the blocked tasks
     can stay. There are two global queues for now in the kernel and they are os_rdy and
