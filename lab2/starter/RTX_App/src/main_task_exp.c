@@ -12,8 +12,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NUM_NAMES 7
+#define NUM_NAMES 8
 _declare_box(mempool,12,20);
+
+void* box;
 
 struct func_info {
   void (*p)();      /* function pointer */
@@ -55,10 +57,11 @@ struct func_info g_task_map[NUM_NAMES] = \
 };
 
 /* no local variables defined, use one global var */
+/*--------------------------- task1 -----------------------------------*/
 __task void task1(void)
 {
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks1: I am wating for task 2 to finish\n");
+	printf("Task1: I am wating for task 2 to finish\n");
 	os_mut_release(g_mut_uart);
 	
 	os_dly_wait(2);
@@ -66,7 +69,7 @@ __task void task1(void)
 	/****/os_mut_wait(g_mut_evnt, 0xFFFF);
 	
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks1: I am Doing Stuff\n");
+	printf("Task1: I am Doing Stuff\n");
 	os_mut_release(g_mut_uart);
 	
 	/****/os_mut_release(g_mut_evnt);
@@ -90,7 +93,7 @@ __task void task2(void)
 	/****/os_mut_wait(g_mut_evnt, 0xFFFF);
 	
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("Taks2: I am Doing Stuff that must occur before Task 1 runs\n");
+	printf("Task2: I am Doing Stuff that must occur before Task 1 runs\n");
 	os_mut_release(g_mut_uart);
 	
 	/****/os_mut_release(g_mut_evnt);
@@ -166,8 +169,8 @@ __task void task3(void){
 /* Allocate memory blocks (created with a lower priority than task5) */
 /*---------------------------------------------------------------------*/
 __task void task4(void){
-	os_dly_wait(10);
 	
+	os_dly_wait(10);
 	printf("Task ID: %d, Attempting to get box (gets blocked) \n", os_tsk_self());
 	box = os_mem_alloc(mempool);
 	printf("Task ID: %d Got box %d (unblocked) \n", os_tsk_self(), box);
@@ -180,9 +183,10 @@ __task void task4(void){
 /* Allocate memory block and gets block (created with a higher priority than task4)
 /*---------------------------------------------------------------------*/
 __task void task5(void){
-	os_dly_wait(10);
+	
 	void* box2;
 	
+	os_dly_wait(10);
 	printf("Task ID: %d, Attempting to get box (gets blocked) \n", os_tsk_self());
 	box2 = os_mem_alloc(mempool);
 	printf("Task ID: %d Got box %d (unblocked first since it has higher priority) \n", os_tsk_self(), box2);
@@ -229,13 +233,11 @@ __task void init(void)
 	os_mut_wait(g_mut_uart, 0xFFFF);
 	printf("init: created task2 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
-
-
-	g_tid = os_tsk_create(task3, 1);  /* task3 at priority 1 */
+	
+	g_tid = os_tsk_create(task3, 1);  /* task 3 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
-	printf("initi: created task3 with Task ID %d\n", g_tid);
+	printf("init: created task3 with Task ID %d\n", g_tid);
 	os_mut_release(g_mut_uart);
-
 
 	g_tid = os_tsk_create(task4, 1);  /* task4 at priority 1 */
 	os_mut_wait(g_mut_uart, 0xFFFF);
