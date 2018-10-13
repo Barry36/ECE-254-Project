@@ -51,8 +51,16 @@ void *rt_mem_alloc (void *mem_pool) {
 	P_TCB task;
 
 	// Allocate a block of memory to the task
+	if(mem_pool == NULL){
+		return NULL;
+	}
 	block_ptr = rt_alloc_box(mem_pool);
-
+	
+	if(block_ptr != NULL){
+		printf("************block_ptr is NULL \n***********");
+	}else{
+		printf("***********block_ptr is not NULL \n***********");
+	}
 	// Return the pointer pointing to the allocated memory block 
 	// if we can successfully allocate a block of memory for the given task
 

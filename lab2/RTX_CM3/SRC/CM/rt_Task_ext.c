@@ -78,4 +78,4 @@ OS_RESULT rt_tsk_get (OS_TID task_id, RL_TASK_INFO *p_task_info) {
 	return OS_R_NOK;
 }
 /* end of file */
- 
+
